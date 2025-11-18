@@ -75,6 +75,7 @@ btr-website/
 ├── dashboard.js       # Regional access control logic
 ├── app.js            # Original AWS integration code
 ├── config.js         # AWS configuration
+├── COST_BREAKDOWN.md # Cost analysis for sales/management
 └── README.md         # This file
 ```
 
