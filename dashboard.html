@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTR Treasury - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ph-blue': '#0038A8',
+                        'ph-red': '#CE1126',
+                        'ph-yellow': '#FCD116',
+                        'ph-white': '#FFFFFF'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-ph-blue shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-ph-white">BTR Treasury</h1>
+                    <span class="ml-2 text-ph-yellow text-sm">Dashboard</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-ph-white text-sm">
+                        <span id="userBadge" class="px-2 py-1 bg-ph-red rounded text-xs font-semibold"></span>
+                        <span id="userName" class="ml-2"></span>
+                    </div>
+                    <button onclick="signOut()" class="bg-ph-red text-ph-white px-4 py-2 rounded-md hover:bg-red-700">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Region Filter (Super Admin Only) -->
+    <div id="regionFilter" class="bg-ph-white border-b border-gray-200 hidden">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex items-center space-x-4">
+                <label class="text-sm font-medium text-gray-700">Region:</label>
+                <select id="regionSelect" class="border border-gray-300 rounded-md px-3 py-1 text-sm focus:border-ph-blue">
+                    <option value="ALL">ALL REGIONS</option>
+                    <option value="NCR">NCR</option>
+                    <option value="REGION-1">REGION-1</option>
+                    <option value="REGION-2">REGION-2</option>
+                    <option value="REGION-3">REGION-3</option>
+                    <option value="REGION-4A">REGION-4A</option>
+                    <option value="REGION-4B">REGION-4B</option>
+                    <option value="REGION-5">REGION-5</option>
+                    <option value="REGION-6">REGION-6</option>
+                    <option value="REGION-7">REGION-7</option>
+                    <option value="REGION-8">REGION-8</option>
+                    <option value="REGION-9">REGION-9</option>
+                    <option value="REGION-10">REGION-10</option>
+                    <option value="REGION-11">REGION-11</option>
+                    <option value="REGION-12">REGION-12</option>
+                    <option value="REGION-13">REGION-13</option>
+                </select>
+                <span id="currentRegion" class="text-sm text-gray-600"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4">
+        <!-- AI Assistant Section -->
+        <div class="bg-ph-white rounded-lg shadow-lg border-t-4 border-ph-blue p-6 mb-6">
+            <h2 class="text-2xl font-bold text-ph-blue mb-4">AI Treasury Assistant</h2>
+            <div id="chatMessages" class="h-64 overflow-y-auto border-2 border-gray-200 rounded-md p-4 mb-4 bg-gray-50"></div>
+            <div class="flex space-x-2">
+                <input type="text" id="chatInput" placeholder="Ask about treasury operations..." class="flex-1 p-3 border-2 border-gray-300 rounded-md focus:border-ph-blue">
+                <button onclick="sendMessage()" class="bg-ph-red text-ph-white px-6 py-3 rounded-md hover:bg-red-700">Send</button>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="bg-ph-white rounded-lg shadow-lg border-t-4 border-ph-yellow p-6 mb-6">
+            <h2 class="text-2xl font-bold text-ph-blue mb-4">Search Documents</h2>
+            <div class="flex space-x-2">
+                <input type="text" id="searchInput" placeholder="Search documents, files, or content..." 
+                       class="flex-1 p-3 border-2 border-gray-300 rounded-md focus:border-ph-blue">
+                <button onclick="performSearch()" class="bg-ph-blue text-ph-white px-6 py-3 rounded-md hover:bg-blue-800">Search</button>
+            </div>
+            <div id="searchResults" class="mt-4 hidden">
+                <h3 class="font-semibold text-gray-700 mb-2">Search Results:</h3>
+                <div id="resultsList" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+            <!-- File Upload Section -->
+            <div class="bg-ph-white rounded-lg shadow-lg border-t-4 border-ph-red p-6">
+                <h2 class="text-2xl font-bold text-ph-blue mb-4">Document Management</h2>
+                
+                <!-- Region Selection for Super Admin -->
+                <div id="uploadRegionSelect" class="mb-4 hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Upload to Region:</label>
+                    <select id="uploadRegion" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:border-ph-blue">
+                        <option value="NCR">NCR</option>
+                        <option value="REGION-1">REGION-1</option>
+                        <option value="REGION-2">REGION-2</option>
+                        <option value="REGION-3">REGION-3</option>
+                        <option value="REGION-4A">REGION-4A</option>
+                        <option value="REGION-4B">REGION-4B</option>
+                        <option value="REGION-5">REGION-5</option>
+                        <option value="REGION-6">REGION-6</option>
+                        <option value="REGION-7">REGION-7</option>
+                        <option value="REGION-8">REGION-8</option>
+                        <option value="REGION-9">REGION-9</option>
+                        <option value="REGION-10">REGION-10</option>
+                        <option value="REGION-11">REGION-11</option>
+                        <option value="REGION-12">REGION-12</option>
+                        <option value="REGION-13">REGION-13</option>
+                    </select>
+                </div>
+
+                <div class="border-2 border-dashed border-ph-yellow rounded-lg p-6 text-center">
+                    <input type="file" id="fileInput" class="hidden" multiple>
+                    <button onclick="document.getElementById('fileInput').click()" class="bg-ph-red text-ph-white px-6 py-3 rounded-md hover:bg-red-700">
+                        Upload Documents
+                    </button>
+                    <p class="mt-2 text-gray-600">Secure S3 Storage</p>
+                </div>
+                <div id="fileList" class="mt-4 space-y-2"></div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="bg-ph-white rounded-lg shadow-lg border-t-4 border-ph-yellow p-6">
+                <h2 class="text-2xl font-bold text-ph-blue mb-4">Treasury Overview</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                        <span class="text-gray-700">Total Documents</span>
+                        <span class="font-bold text-ph-blue" id="docCount">0</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                        <span class="text-gray-700">Storage Used</span>
+                        <span class="font-bold text-ph-red" id="storageUsed">0 MB</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                        <span class="text-gray-700">AI Queries</span>
+                        <span class="font-bold text-ph-yellow" id="aiQueries">0</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                        <span class="text-gray-700">Current Region</span>
+                        <span class="font-bold text-ph-blue" id="statsRegion">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.24.min.js"></script>
+    <script src="https://amazon-cognito-identity-js.s3.amazonaws.com/amazon-cognito-identity.min.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
